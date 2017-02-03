@@ -1,5 +1,5 @@
 # AAE
-Adversarial Auto Encoder (AAE) with tensorflow
+Adversarial Auto Encoder (AAE) with tensorflow for MNIST
 
 # 100 epoch results
 ![AAE](results/AAE.png)
