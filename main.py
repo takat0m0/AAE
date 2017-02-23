@@ -6,15 +6,19 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
+import argparse
+
 from Model import Model
 #from util import get_figs, dump_figs
 from make_fig import get_batch
 
 if __name__ == u'__main__':
 
-    # figs dir
-    dir_name = u'figs'
-
+    # args
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data', '-d', default = None, type = str)
+    args = parser.parse_args()
+    
     # parameter
     batch_size = 100
     epoch_num = 100
@@ -27,7 +31,8 @@ if __name__ == u'__main__':
     
     # get_data
     print('-- get figs--')
-    with open('mnist_test.csv') as f:
+    #with open('mnist_test.csv') as f:
+    with open(args.data) as f:
         labels, figs = get_batch(f, 5000)
     print('num figs = {}'.format(len(figs)))
     

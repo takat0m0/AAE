@@ -5,6 +5,7 @@ import sys
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+import argparse
 
 import cv2
 from Model import Model
@@ -31,12 +32,16 @@ class FigGenerator(object):
         return self.model.figure_generate(self.sess, z_inputs)
 
 if __name__ == u'__main__':
+    # args
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data', '-d', default = None, type = str)
+    args = parser.parse_args()
 
     # dump file
     dump_file = u'./model.dump'
     
     # parameter
-    batch_size = 20
+    batch_size = 300
     z_dim = 2
 
     # figure generator
@@ -52,11 +57,10 @@ if __name__ == u'__main__':
         cv2.imwrite(os.path.join('sample_result', '{}.jpg'.format(i)), tmp)
     '''
 
-    with open('mnist_test.csv', 'r') as f:
+    with open(args.data, 'r') as f:
         labels, figs = get_batch(f, batch_size)
     z = fig_gen.encoding(figs)
     indexes = np.argmax(np.asarray(labels), axis = 1)
     plt.scatter(z[:, 0], z[:, 1], c = indexes)
-    plt.legend()
     plt.show()
     
