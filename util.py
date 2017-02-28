@@ -4,7 +4,7 @@ import os
 import sys
 
 import tensorflow as tf
-import cv2
+# import cv2
 import numpy as np
 
 def get_weights(name, shape, stddev, trainable = True):

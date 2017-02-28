@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 
-import cv2
+# import cv2
 from Model import Model
 #from util import get_figs, dump_figs
 from make_fig import get_batch
