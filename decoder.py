@@ -23,12 +23,12 @@ class Decoder(object):
                 ret.append(var)
         return ret
     
-    def set_model(self, z,  is_training):
+    def set_model(self, z,  is_training, reuse = False):
         u'''
         return only logits. not sigmoid(logits).
         '''
         h = z
-        with tf.variable_scope(self.name_scope):
+        with tf.variable_scope(self.name_scope, reuse = reuse):
             for i, (in_dim, out_dim) in enumerate(zip(self.layer_list, self.layer_list[1:])):
                 ret = linear_layer(h, in_dim, out_dim, i)
                 h = batch_norm(ret, i, is_training)

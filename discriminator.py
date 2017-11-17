@@ -21,12 +21,12 @@ class Discriminator(object):
                 ret.append(var)
         return ret
     
-    def set_model(self, z, y, is_training):
+    def set_model(self, z, y, is_training, reuse = False):
         # return only logits
         
-        h = tf.concat(1, [z, y])
+        h = tf.concat([z, y], 1)
         
-        with tf.variable_scope(self.name_scope):
+        with tf.variable_scope(self.name_scope, reuse = reuse):
             for i, (in_dim, out_dim) in enumerate(zip(self.layer_list, self.layer_list[1:])):
                 ret = linear_layer(h, in_dim, out_dim, i)
                 h = batch_norm(ret, i, is_training)

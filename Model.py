@@ -53,26 +53,23 @@ class Model(object):
         # make GAN loss
         self.y_labeled = tf.placeholder(tf.float32, [self.batch_size, self.class_num + 1])
         
-        vae_logits = self.discriminator.set_model(z, self.y_labeled, is_training = True)
+        vae_logits = self.discriminator.set_model(z, self.y_labeled, is_training = True, reuse = False)
         obj_disc_from_vae = tf.reduce_mean(
             tf.nn.sigmoid_cross_entropy_with_logits(
                 logits = vae_logits,
-                targets = tf.zeros_like(vae_logits)))
+                labels = tf.zeros_like(vae_logits)))
         obj_gen_from_vae = tf.reduce_mean(
             tf.nn.sigmoid_cross_entropy_with_logits(
                 logits = vae_logits,
-                targets = tf.ones_like(vae_logits)))
-
-        # == for sharing variables ===
-        tf.get_variable_scope().reuse_variables()
+                labels = tf.ones_like(vae_logits)))
 
         # discriminator
         self.z_input = tf.placeholder(dtype = tf.float32, shape = [self.batch_size, self.z_dim])
-        disc_logits = self.discriminator.set_model(self.z_input, self.y_labeled, is_training = True)
+        disc_logits = self.discriminator.set_model(self.z_input, self.y_labeled, is_training = True, reuse = True)
         obj_disc_from_inputs = tf.reduce_mean(
             tf.nn.sigmoid_cross_entropy_with_logits(
                 logits = disc_logits,
-                targets = tf.ones_like(disc_logits)))
+                labels = tf.ones_like(disc_logits)))
 
         # -- train -----
         self.obj_vae = reconstruct_error
@@ -86,8 +83,8 @@ class Model(object):
         train_vars = self.discriminator.get_variables()
         self.train_disc  = tf.train.AdamOptimizer(self.lr).minimize(self.obj_disc, var_list = train_vars)
         # -- for using ---------------------
-        self.mu, _  = self.encoder.set_model(self.x_labeled, is_training = False)
-        self.generate_figs = self.decoder.set_model(self.z_input, is_training = False)
+        self.mu, _  = self.encoder.set_model(self.x_labeled, is_training = False, reuse = True)
+        self.generate_figs = self.decoder.set_model(self.z_input, is_training = False, reuse = True)
         
     def training_vae(self, sess, figs):
         _, obj_vae = sess.run([self.train_vae, self.obj_vae],
